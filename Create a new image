@@ -1,0 +1,4 @@
+from PIL import Image
+
+img = Image.new('RGB', (1080, 1920), color=(59, 99, 120))
+img.save('bg_img.png')
