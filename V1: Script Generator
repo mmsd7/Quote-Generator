@@ -1,0 +1,42 @@
+from openai import OpenAI
+import os
+
+def generate_and_write_essay(api_key, prompt, output_filename):
+    client = OpenAI(api_key=api_key)
+
+    response = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      messages=[
+        {
+          "role": "user",
+          "content": f'Please generate 10 points or tips on the topic {keyword}. Write each point or tips name only, and provide a serial number before each point. Please exclude the description, and focus on providing concise points.'
+        }
+      ],
+      temperature=1,
+      max_tokens=256,
+      top_p=1,
+      frequency_penalty=0,
+      presence_penalty=0
+    )
+
+    generated_content = response.choices[0].message.content
+
+    with open(output_filename, 'w') as file:
+        file.write(keyword+'\n'+generated_content)
+
+# Example usage in a for loop
+
+with open('title.txt', 'r', encoding="utf-8") as file:
+    keywords = file.readlines()
+keywords= [x.strip() for x in keywords]
+
+for keyword in keywords:
+    keyword = keyword.replace('"', '')
+    single_prompt= f'Please generate 10 points or tips on the topic {keyword}. Write each point briefly in a single sentence, and provide a serial number before each point. Please exclude the topic name and description, and focus on providing concise points.'
+
+# prompts = ["Internet", "Artificial Intelligence", "Climate Change"]
+
+# for prompt in prompts:
+    api_key = '-----------------------'
+    output_filename = f"script/{keyword}.txt"
+    generate_and_write_essay(api_key, keyword, output_filename)
